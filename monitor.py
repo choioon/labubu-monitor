@@ -10,7 +10,7 @@ load_dotenv()
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 POP_MART_URL = "https://www.popmart.com/gb/products/641/THE-MONSTERS---Exciting-Macaron-Vinyl-Face-Blind-Box"
-ALIEXPRESS_URL = "https://www.aliexpress.com/item/1005007966229736.html"
+ALIEXPRESS_URL = "https://www.aliexpress.com/item/1005008943281649.html?spm=a2g0o.tm1000009216.d0.1.2bf7474cAnXru3&sourceType=562&pvid=90ef70cd-fee7-4341-9da2-40c5a0884771&pdp_ext_f=%7B%22ship_from%22:%22CN%22,%22sku_id%22:%2212000047298030275%22%7D&scm=1007.28480.422277.0&scm-url=1007.28480.422277.0&scm_id=1007.28480.422277.0&pdp_npi=4%40dis%21GBP%21%EF%BF%A135.41%21%EF%BF%A116.29%21%21%21334.69%21153.97%21%40210385a817501013273496253ed012%2112000047298030275%21gsd%21UK%216277881189%21X&channel=sd&aecmd=true"
 
 # ---------- Utility ----------
 
