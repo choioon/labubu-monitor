@@ -1,6 +1,8 @@
 import asyncio
 from playwright.async_api import async_playwright
 from discord_webhook import DiscordWebhook
+from dotenv import load_dotenv
+load_dotenv()
 import os
 
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
