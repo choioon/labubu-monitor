@@ -15,7 +15,7 @@ ALIEXPRESS_URL = "https://www.aliexpress.com/item/1005007966229736.html"
 # ---------- Utility ----------
 
 def now():
-    return datetime.utcnow().strftime("[%Y-%m-%d %H:%M:%S UTC]")
+    return datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
 
 async def send_discord_alert(message):
     webhook = DiscordWebhook(url=DISCORD_WEBHOOK_URL, content=message)
@@ -40,21 +40,39 @@ async def reliable_check(fn, retries=3):
 async def is_popmart_in_stock(page):
     await page.goto(POP_MART_URL, timeout=60000)
     try:
-        await page.locator("text=NOTIFY ME WHEN AVAILABLE").first.wait_for(timeout=5000)
-        print(now(), "Pop Mart: Out-of-stock text found.")
-        return False
-    except:
-        print(now(), "Pop Mart: Text not found — might be in stock!")
+        # Wait up to 10s for the "Notify me" div to appear
+        await page.wait_for_selector("div.index_btn__w5nKF.index_black__RgEgP.index_btnFull__F7k90", timeout=10000)
+        text = await page.inner_text("div.index_btn__w5nKF.index_black__RgEgP.index_btnFull__F7k90")
+        if "NOTIFY ME WHEN AVAILABLE" in text.upper():
+            print(now(), "Pop Mart: Found 'Notify me' — sold out.")
+            return False
+        else:
+            print(now(), "Pop Mart: 'Notify me' text NOT found — assuming in stock.")
+            return True
+    except Exception:
+        # If selector didn't appear, probably button is replaced by Add to Cart, so in stock
+        print(now(), "Pop Mart: 'Notify me' div NOT found — assuming in stock.")
         return True
+
+
+
 
 async def is_aliexpress_in_stock(page):
     await page.goto(ALIEXPRESS_URL, timeout=60000)
     try:
-        await page.locator("text=Find similar items").first.wait_for(timeout=5000)
-        print(now(), "AliExpress: Out-of-stock text found.")
-        return False
-    except:
-        print(now(), "AliExpress: Text not found — might be in stock!")
+        # Wait for the "Find similar items" button or span
+        await page.wait_for_selector("button.find-similar--findsimilar--dgsA7rv, span", timeout=10000)
+        elements = await page.query_selector_all("button.find-similar--findsimilar--dgsA7rv, span")
+        for el in elements:
+            text = (await el.inner_text()).strip().lower()
+            if text == "find similar items":
+                print(now(), "AliExpress: Found 'Find similar items' — sold out.")
+                return False
+        print(now(), "AliExpress: 'Find similar items' NOT found — assuming in stock.")
+        return True
+    except Exception:
+        # If selector didn't appear, probably "Add to Cart" shows up => in stock
+        print(now(), "AliExpress: 'Find similar items' NOT found — assuming in stock.")
         return True
 
 # ---------- Main Monitor ----------
