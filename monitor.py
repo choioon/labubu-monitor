@@ -40,23 +40,21 @@ async def reliable_check(fn, retries=3):
 async def is_popmart_in_stock(page):
     await page.goto(POP_MART_URL, timeout=60000)
     try:
-        # If the out-of-stock button is present, it's sold out
-        await page.wait_for_selector("div.index_btn__w5nKF", timeout=5000)
-        print(now(), "Pop Mart: Out-of-stock button detected.")
+        await page.locator("text=NOTIFY ME WHEN AVAILABLE").first.wait_for(timeout=5000)
+        print(now(), "Pop Mart: Out-of-stock text found.")
         return False
     except:
-        print(now(), "Pop Mart: Out-of-stock element NOT found — might be in stock!")
+        print(now(), "Pop Mart: Text not found — might be in stock!")
         return True
 
 async def is_aliexpress_in_stock(page):
     await page.goto(ALIEXPRESS_URL, timeout=60000)
     try:
-        # If the "Find similar items" button is present, it's sold out
-        await page.wait_for_selector("button.find-similar--findsimilar--dgsA7rv", timeout=5000)
-        print(now(), "AliExpress: 'Find similar items' button detected.")
+        await page.locator("text=Find similar items").first.wait_for(timeout=5000)
+        print(now(), "AliExpress: Out-of-stock text found.")
         return False
     except:
-        print(now(), "AliExpress: Button not found — might be in stock!")
+        print(now(), "AliExpress: Text not found — might be in stock!")
         return True
 
 # ---------- Main Monitor ----------
