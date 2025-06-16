@@ -1,2 +1,6 @@
 playwright
 discord-webhook
+requests
+beautifulsoup4
+flask
+python-dotenv
