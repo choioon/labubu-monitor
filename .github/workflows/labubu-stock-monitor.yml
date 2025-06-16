@@ -6,7 +6,7 @@ on:
   workflow_dispatch:       # allows manual run
 
 jobs:
-  run-monitor:
+  monitor-fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
